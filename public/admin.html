@@ -825,12 +825,6 @@
         const n = parseInt(accN.value);
         if (!(n >= 1 && n <= s.emails.length))
           return showToast("warning", "⚠️ Jumlah tidak valid (1–" + s.emails.length + ").");
-        const u = db.users.find((x) => x.username === s.user);
-        s.status = "diterima";
-        s.accepted = n;
-        s.verifiedAt = Date.now();
-        s.earned = n * db.settings.rate;
-        if (u) u.saldo += s.earned;
         showToast("warning", NOT_SAVED);
       }
       function rejModal(id) {
@@ -849,10 +843,6 @@
           r = rCustom.value.trim();
           if (!r) return showToast("warning", "⚠️ Harap isi alasan penolakan kustom!");
         }
-        const s = db.setoran.find((x) => x.id === id);
-        s.status = "ditolak";
-        s.reason = r;
-        s.verifiedAt = Date.now();
         showToast("warning", NOT_SAVED);
       }
 
@@ -907,11 +897,6 @@
           '<tr><td colspan="9" class="p-6 text-center text-slate-400">Belum ada permintaan</td></tr>';
       }
       function accWd(id) {
-        const w = db.withdrawals.find((x) => x.id === id);
-        w.status = "selesai";
-        w.doneAt = Date.now();
-        const u = db.users.find((x) => x.username === w.user);
-        if (u) u.withdrawn += w.amount;
         showToast("warning", NOT_SAVED);
       }
       function rejWdModal(id) {
