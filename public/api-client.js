@@ -642,7 +642,8 @@
       } else if (!["login", "register"].includes(requestedView || "login"))
         window.navigateTo?.("login");
     } catch (error) {
-      console.warn("Backend belum siap:", error.message);
+      console.error("Gagal memuat sesi akun:", error);
+      showToast("error", `Gagal memuat sesi akun: ${errorText(error, "server tidak merespons.")}`);
     }
   });
 })();
