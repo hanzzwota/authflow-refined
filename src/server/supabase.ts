@@ -170,6 +170,9 @@ export function errorResponse(error: unknown) {
     return json({ error: error.message }, { status: 503 });
   }
   const message = error instanceof Error ? error.message : "Terjadi kesalahan server";
+  // Validation raised by the withdrawal trigger is a user-facing 400, not a server error.
+  const minimum = message.match(/"message"\s*:\s*"(Minimal penarikan[^"]*)"/);
+  if (minimum) return json({ error: minimum[1] }, { status: 400 });
   // Never leak raw database errors to the browser.
   const safe = message.startsWith("Supabase ") ? "Terjadi kesalahan pada database server" : message;
   return json({ error: safe }, { status: 500 });
