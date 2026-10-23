@@ -14,8 +14,8 @@ export class DatabaseUnavailableError extends Error {
 
 // Read config per request: env vars are only guaranteed inside handlers on the edge runtime.
 function supabaseConfig() {
-  const url = process.env.SUPABASE_URL ?? "";
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+  const url = process.env["SUPABASE_URL"] ?? "";
+  const key = process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "";
   if (!url || !key) {
     throw new Error("Koneksi database belum dikonfigurasi di server (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)");
   }
@@ -30,7 +30,7 @@ export async function supabaseFetch<T = Row>(path: string, init: RequestInit = {
     ...((init.headers as Record<string, string>) ?? {}),
   };
   // New-style keys (sb_secret_...) are opaque, not JWTs: sending them as a Bearer token is rejected.
-  if (!key.startsWith("sb_")) headers.Authorization = `Bearer ${key}`;
+  if (!key.startsWith("sb_")) headers["Authorization"] = `Bearer ${key}`;
   let response: Response;
   try {
     response = await fetch(`${url}/rest/v1/${path}`, { ...init, headers });
@@ -140,7 +140,7 @@ export async function requireUser(request: Request) {
 
 export async function requireAdmin(request: Request) {
   const user = await requireUser(request);
-  if (user.role !== "admin")
+  if (user["role"] !== "admin")
     throw new Response(JSON.stringify({ error: "Akses admin ditolak" }), {
       status: 403,
       headers: { "content-type": "application/json" },
