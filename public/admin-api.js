@@ -306,14 +306,6 @@
     }
     const previous = db.settings[key];
     const next = !previous;
-    try {
-      await api("admin/settings", {
-        method: "PATCH",
-        body: JSON.stringify(settingsPayload()),
-      }).catch((error) => {
-        throw error;
-      });
-    } catch {}
     db.settings[key] = next;
     try {
       await api("admin/settings", {
