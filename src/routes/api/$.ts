@@ -724,9 +724,9 @@ async function handler(request: Request, path: string) {
   if (request.method === "POST" && path.startsWith("admin/deposits/") && path.endsWith("/reject"))
     return rejectDeposit(request, path.split("/")[2] ?? "");
   if (request.method === "POST" && path.startsWith("admin/users/") && path.endsWith("/block"))
-    return setUserBlocked(request, path.split("/")[2], true);
+    return setUserBlocked(request, path.split("/")[2] ?? "", true);
   if (request.method === "POST" && path.startsWith("admin/users/") && path.endsWith("/unblock"))
-    return setUserBlocked(request, path.split("/")[2], false);
+    return setUserBlocked(request, path.split("/")[2] ?? "", false);
   if (request.method === "POST" && path.startsWith("admin/users/") && path.endsWith("/delete"))
     return deleteUser(request, path.split("/")[2] ?? "");
   if (request.method === "PATCH" && path === "admin/settings") return updateSettings(request);
@@ -741,13 +741,13 @@ async function handler(request: Request, path: string) {
     path.startsWith("admin/withdrawals/") &&
     path.endsWith("/approve")
   )
-    return processWithdrawal(request, path.split("/")[2], "selesai");
+    return processWithdrawal(request, path.split("/")[2] ?? "", "selesai");
   if (
     request.method === "POST" &&
     path.startsWith("admin/withdrawals/") &&
     path.endsWith("/reject")
   )
-    return processWithdrawal(request, path.split("/")[2], "ditolak");
+    return processWithdrawal(request, path.split("/")[2] ?? "", "ditolak");
   return json({ error: "API route tidak ditemukan" }, { status: 404 });
 }
 
